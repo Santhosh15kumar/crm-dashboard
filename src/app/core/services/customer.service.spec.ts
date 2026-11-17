@@ -104,4 +104,16 @@ describe('CustomerService', () => {
     expect(service.delete(existing.id)).toBe(false);
     expect(JSON.parse(window.localStorage.getItem(CUSTOMER_STORAGE_KEY) ?? '[]')).not.toContainEqual(existing);
   });
+
+  it('keeps the in-session change and exposes a warning when LocalStorage writes fail', () => {
+    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('Storage quota exceeded', 'QuotaExceededError');
+    });
+
+    const created = service.create(formData);
+
+    expect(service.getById(created.id)).toEqual(created);
+    expect(service.persistenceWarning()).toContain('could not be saved');
+    setItem.mockRestore();
+  });
 });
