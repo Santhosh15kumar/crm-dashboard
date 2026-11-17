@@ -12,7 +12,6 @@ export interface CustomerSort {
   standalone: true,
   imports: [DatePipe],
   templateUrl: './customer-table.html',
-  styleUrl: './customer-table.scss',
 })
 export class CustomerTable {
   @Input({ required: true }) customers: readonly Customer[] = [];

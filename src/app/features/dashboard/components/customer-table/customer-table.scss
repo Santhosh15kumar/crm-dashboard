@@ -1,26 +1,31 @@
-:host { display: block; }
+app-customer-table {
+display: block;
 .customer-panel { overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-card); background: var(--color-surface); box-shadow: var(--shadow-card); }
-.customer-panel__header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 22px 17px; }
+.customer-panel__header, .table-toolbar { display: flex; align-items: center; }
+.customer-panel__header { justify-content: space-between; gap: 16px; padding: 20px 22px 17px; }
 .customer-panel__title-row { display: flex; align-items: center; gap: 9px; }
 .customer-panel__header h2 { margin: 0; color: #253247; font-size: 14px; font-weight: 700; }
 .customer-panel__header p { margin: 5px 0 0; color: #98a1af; font-size: 10px; }
 .record-count { padding: 3px 7px; border-radius: 10px; background: #f0f1ff; color: #5b64d4; font-size: 9px; font-weight: 700; }
 .add-customer { display: inline-flex; min-height: 34px; align-items: center; gap: 7px; padding: 0 11px; border: 0; border-radius: 7px; background: #5964dc; color: #fff; font-size: 10px; font-weight: 600; }
 .add-customer span { font-size: 16px; line-height: 1; }
-.table-toolbar { display: flex; align-items: center; gap: 10px; padding: 12px 22px; border-top: 1px solid #f0f2f5; border-bottom: 1px solid #f0f2f5; }
-.table-search { display: flex; width: min(290px, 100%); height: 34px; align-items: center; gap: 8px; padding: 0 9px; border: 1px solid #e7ebf0; border-radius: 7px; color: #95a0b0; }
+.table-toolbar { gap: 10px; padding: 12px 22px; border-block: 1px solid #f0f2f5; }
+.table-search, .status-filter { display: flex; height: 34px; align-items: center; padding: 0 9px; border: 1px solid #e7ebf0; border-radius: 7px; }
+.table-search { width: min(290px, 100%); gap: 8px; color: #95a0b0; }
 .table-search svg { width: 15px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.7; }
-.table-search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: #334056; font-size: 10px; }
+.table-search input, .status-filter select { border: 0; outline: 0; background: transparent; }
+.table-search input { width: 100%; min-width: 0; color: #334056; font-size: 10px; }
 .table-search input::placeholder { color: #a2aab6; }
-.status-filter { display: flex; height: 34px; align-items: center; gap: 7px; padding: 0 9px; border: 1px solid #e7ebf0; border-radius: 7px; color: #7d8899; }
+.status-filter { gap: 7px; color: #7d8899; }
 .status-filter__label { font-size: 9px; }
-.status-filter select { max-width: 104px; border: 0; outline: 0; background: transparent; color: #435066; font-size: 10px; }
+.status-filter select { max-width: 104px; color: #435066; font-size: 10px; }
 .table-scroll { overflow-x: auto; }
 table { width: 100%; min-width: 830px; border-collapse: collapse; text-align: left; }
 thead { background: #fafbfc; }
 th { height: 39px; padding: 0 16px; color: #8d97a6; font-size: 9px; font-weight: 600; white-space: nowrap; }
 th:first-child, td:first-child { padding-left: 22px; }
-th button { display: inline-flex; align-items: center; gap: 6px; padding: 6px 0; border: 0; background: transparent; color: inherit; font: inherit; font-weight: inherit; }
+th button, .row-actions button { border: 0; background: transparent; }
+th button { display: inline-flex; align-items: center; gap: 6px; padding: 6px 0; color: inherit; font: inherit; }
 th button span { color: #b2b9c3; font-size: 12px; }
 th button:hover { color: #545fd2; }
 tbody tr { border-top: 1px solid #f0f2f5; }
@@ -39,7 +44,7 @@ td { height: 60px; padding: 8px 16px; color: #455267; font-size: 10px; white-spa
 .status-badge--inactive { background: #f0f2f5; color: #596477; }
 .muted-cell { color: #8792a2; }
 .row-actions { display: flex; align-items: center; gap: 5px; }
-.row-actions button { padding: 6px 7px; border: 0; border-radius: 5px; background: transparent; color: #4e5bd0; font-size: 10px; font-weight: 600; }
+.row-actions button { padding: 6px 7px; border-radius: 5px; color: #4e5bd0; font-size: 10px; font-weight: 600; }
 .row-actions button:hover { background: #f0f1ff; }
 .row-actions .row-actions__delete { color: #a73d49; }
 .row-actions .row-actions__delete:hover { background: #fff0f1; }
@@ -64,4 +69,5 @@ td { height: 60px; padding: 8px 16px; color: #455267; font-size: 10px; white-spa
   .status-filter select { max-width: 95px; }
   th:first-child, td:first-child { padding-left: 15px; }
   .table-footer { padding-inline: 15px; }
+}
 }
