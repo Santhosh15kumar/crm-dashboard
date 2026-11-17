@@ -1,0 +1,15 @@
+:host { display: block; min-height: 100dvh; }
+.app-shell { min-height: 100dvh; background: var(--color-canvas); }
+.app-shell__main { min-height: 100dvh; }
+.app-shell__content { min-height: calc(100dvh - 88px); padding: 30px 36px; }
+.sidebar-backdrop { position: fixed; inset: 0; z-index: 20; border: 0; background: rgb(18 28 45 / 32%); }
+
+@media (min-width: 900px) {
+  .app-shell__main { margin-left: var(--sidebar-width); }
+}
+@media (max-width: 899px) {
+  .app-shell__content { min-height: calc(100dvh - 78px); padding: 24px 22px; }
+}
+@media (max-width: 620px) {
+  .app-shell__content { min-height: calc(100dvh - 122px); padding: 20px 16px; }
+}

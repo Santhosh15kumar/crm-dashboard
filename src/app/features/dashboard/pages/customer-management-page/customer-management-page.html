@@ -1,0 +1,20 @@
+<section class="customer-management" aria-labelledby="customer-management-title">
+  <div class="page-heading">
+    <div>
+      <p class="page-heading__eyebrow">Customer directory</p>
+      <h2 id="customer-management-title">Customers</h2>
+      <p class="page-heading__description">Search, sort, and review your customer records.</p>
+    </div>
+  </div>
+
+  <app-customer-table
+    [customers]="filteredCustomers()"
+    [searchTerm]="searchTerm()"
+    [statusFilter]="statusFilter()"
+    [sort]="sort()"
+    (searchChanged)="updateSearch($event)"
+    (statusChanged)="updateStatus($event)"
+    (sortChanged)="updateSort($event)"
+    (filtersCleared)="clearFilters()"
+  />
+</section>

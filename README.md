@@ -1,59 +1,63 @@
-# CrmDashboard
+# Northstar CRM Dashboard
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.7.
+A responsive CRM dashboard built with Angular 22, TypeScript, and SCSS. This repository currently contains the application shell, dashboard overview, and customer directory backed by typed mock data.
 
-## Development server
+## Getting started
 
-To start a local development server, run:
+### Requirements
 
-```bash
-ng serve
-```
+- Node.js supported by the installed Angular CLI
+- npm
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Install and run
 
 ```bash
-ng generate component component-name
+npm install
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Open `http://localhost:4200/` in a browser. The development server reloads the app when source files change.
+
+## Current features
+
+- Responsive application shell with sidebar navigation, page title, header search field, and profile placeholder.
+- Dashboard overview with four KPI cards:
+  - Total Customers
+  - Active Customers
+  - New Customers (added in the last 30 days)
+  - Pending Follow-ups (due today or overdue)
+- Customer directory at `/customers` with mock customer records, search by name or email, status filtering, name/date sorting, and an empty state with a clear-filters action.
+- Reports and Settings routes with placeholder pages for future work.
+- Standalone Angular components, semantic HTML, accessible labels and table controls, and responsive SCSS.
+
+## Project structure
+
+```text
+src/app/
+  core/
+    layout/app-shell/           # App layout and mobile navigation state
+    models/                     # Customer and dashboard metric types
+    services/                   # Customer mock data and dashboard metrics
+  features/dashboard/
+    components/                 # Header, sidebar, KPI cards, customer table
+    pages/                      # Dashboard, customer directory, placeholders
+  app.routes.ts                 # Dashboard and section routes
+src/styles.scss                 # Global styles and shared CSS variables
+```
+
+Customer data is defined by the `Customer` interface in `src/app/core/models/customer.model.ts` and provided by `CustomerService`. `DashboardService` derives the KPI values from those records. No backend API or persistence layer is configured.
+
+## Available scripts
 
 ```bash
-ng generate --help
+npm start        # Run the development server
+npm run build    # Create a production build
+npm test         # Run the configured unit test command
 ```
 
-## Building
+## Current scope and next steps
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Customer records and KPI values are based on local mock data; changes are not persisted.
+- The header search, account/profile, and notification controls are visual placeholders.
+- Reports, Settings, and adding customers are not implemented yet.
+- This README will be updated as the application grows.

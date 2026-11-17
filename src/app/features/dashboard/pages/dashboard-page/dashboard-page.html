@@ -1,0 +1,15 @@
+<section class="dashboard-page" aria-labelledby="dashboard-title">
+  <div class="page-heading">
+    <div>
+      <p class="page-heading__eyebrow">{{ today | date: 'EEEE, MMMM d, y' }}</p>
+      <h2 id="dashboard-title">Dashboard overview</h2>
+      <p class="page-heading__description">Here is what is happening with your customers today.</p>
+    </div>
+    <span class="date-range">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+      <span>All time</span>
+    </span>
+  </div>
+
+  <app-summary-cards [metrics]="metrics" />
+</section>

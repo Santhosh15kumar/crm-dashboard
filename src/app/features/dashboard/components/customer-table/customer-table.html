@@ -1,0 +1,50 @@
+<section class="customer-panel" aria-labelledby="customers-title">
+  <div class="customer-panel__header">
+    <div>
+      <div class="customer-panel__title-row"><h2 id="customers-title">Customers</h2><span class="record-count">{{ customers.length }}</span></div>
+      <p>Manage and track your customer relationships.</p>
+    </div>
+    <button class="add-customer" type="button" disabled aria-label="Add customer (coming soon)"><span aria-hidden="true">+</span> Add customer</button>
+  </div>
+
+  <div class="table-toolbar">
+    <label class="table-search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input type="search" [value]="searchTerm" placeholder="Search customers..." aria-label="Search customers by name or email" (input)="onSearchInput($event)" />
+    </label>
+    <label class="status-filter">
+      <span class="status-filter__label">Status</span>
+      <select [value]="statusFilter" aria-label="Filter customers by status" (change)="onStatusChange($event)">
+        <option value="all">All statuses</option><option value="active">Active</option><option value="lead">Lead</option><option value="inactive">Inactive</option>
+      </select>
+    </label>
+  </div>
+  <p class="sr-only" aria-live="polite" aria-atomic="true">{{ customers.length }} matching customer{{ customers.length === 1 ? '' : 's' }}.</p>
+
+  <div class="table-scroll" role="region" aria-label="Customer list" tabindex="0">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col" [attr.aria-sort]="sort.field === 'name' ? (sort.direction === 'asc' ? 'ascending' : 'descending') : 'none'"><button type="button" (click)="toggleSort('name')" [attr.aria-label]="'Sort by customer name. ' + sortLabel('name')">Customer <span>↕</span></button></th>
+          <th scope="col">Company</th>
+          <th scope="col">Status</th>
+          <th scope="col" [attr.aria-sort]="sort.field === 'createdAt' ? (sort.direction === 'asc' ? 'ascending' : 'descending') : 'none'"><button type="button" (click)="toggleSort('createdAt')" [attr.aria-label]="'Sort by date added. ' + sortLabel('createdAt')">Date added <span>↕</span></button></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (customer of customers; track customer.id) {
+          <tr>
+            <td><div class="customer-identity"><span class="customer-avatar" aria-hidden="true">{{ initials(customer.name) }}</span><span class="customer-identity__details"><strong>{{ customer.name }}</strong><small>{{ customer.email }}</small></span></div></td>
+            <td><span class="company-name">{{ customer.company }}</span></td>
+            <td><span class="status-badge" [class]="'status-badge status-badge--' + customer.status">{{ customer.status }}</span></td>
+            <td class="muted-cell">{{ customer.createdAt | date: 'MMM d, y' }}</td>
+          </tr>
+        } @empty {
+          <tr><td class="empty-state" colspan="4"><span class="empty-state__icon" aria-hidden="true">⌕</span><strong>No customers found</strong><span>Try changing your search or status filter.</span>@if (searchTerm || statusFilter !== 'all') { <button type="button" class="clear-filters" (click)="filtersCleared.emit()">Clear filters</button> }</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer"><span>Showing <strong>{{ customers.length }}</strong> customer{{ customers.length === 1 ? '' : 's' }}</span><span class="table-footer__note">Updated just now</span></div>
+</section>

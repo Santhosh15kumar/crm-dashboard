@@ -1,0 +1,37 @@
+<section class="metrics-grid" aria-label="Customer overview metrics">
+  <article class="metric-card metric-card--violet">
+    <div class="metric-card__topline">
+      <span class="metric-card__label">Total customers</span>
+      <span class="metric-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20"/><circle cx="9.5" cy="7.5" r="3.5"/><path d="M17 11a3.5 3.5 0 1 0 0-7M21 20v-1.5a4 4 0 0 0-3-3.87"/></svg></span>
+    </div>
+    <p class="metric-card__value">{{ metrics.totalCustomers | number }}</p>
+    <p class="metric-card__note">Customer records in your workspace</p>
+  </article>
+
+  <article class="metric-card metric-card--green">
+    <div class="metric-card__topline">
+      <span class="metric-card__label">Active customers</span>
+      <span class="metric-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 7 10 17l-5-5"/><circle cx="12" cy="12" r="9"/></svg></span>
+    </div>
+    <p class="metric-card__value">{{ metrics.activeCustomers | number }}</p>
+    <p class="metric-card__note">Currently marked as active</p>
+  </article>
+
+  <article class="metric-card metric-card--amber">
+    <div class="metric-card__topline">
+      <span class="metric-card__label">New customers</span>
+      <span class="metric-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
+    </div>
+    <p class="metric-card__value">{{ metrics.newCustomers | number }}</p>
+    <p class="metric-card__note">Added in the last 30 days</p>
+  </article>
+
+  <article class="metric-card metric-card--blue">
+    <div class="metric-card__topline">
+      <span class="metric-card__label">Pending follow-ups</span>
+      <span class="metric-card__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+    </div>
+    <p class="metric-card__value">{{ metrics.pendingFollowUps | number }}</p>
+    <p class="metric-card__note">Due today or overdue</p>
+  </article>
+</section>

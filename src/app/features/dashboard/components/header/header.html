@@ -1,0 +1,23 @@
+<header class="topbar">
+  <button #menuButton class="menu-button" type="button" aria-controls="main-navigation" [attr.aria-expanded]="menuOpen" [attr.aria-label]="menuOpen ? 'Close navigation' : 'Open navigation'" (click)="menuClicked.emit()">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="topbar__heading">
+    <p class="topbar__eyebrow">Workspace / <span>Overview</span></p>
+    <h1>{{ pageTitle }}</h1>
+  </div>
+  <div class="topbar__actions">
+    <label class="search-box">
+      <span aria-hidden="true">⌕</span>
+      <input type="search" placeholder="Search anything..." aria-label="Search anything" />
+      <kbd>⌘ K</kbd>
+    </label>
+    <button class="icon-button notification-button" type="button" aria-label="Notifications, 3 unread">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+      <span></span>
+    </button>
+    <button class="topbar__user" type="button" aria-label="Open Jordan Davis account menu">
+      <span class="topbar__avatar">JD</span><span class="topbar__user-name">Jordan Davis</span><span class="topbar__chevron">⌄</span>
+    </button>
+  </div>
+</header>

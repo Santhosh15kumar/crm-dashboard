@@ -1,1 +1,59 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --color-brand: #5964dc;
+  --color-text: #1d2a3d;
+  --color-text-muted: #8994a5;
+  --color-border: #e9edf2;
+  --color-surface: #fff;
+  --color-canvas: #f7f8fb;
+  --radius-card: 11px;
+  --shadow-card: 0 2px 5px rgb(27 39 60 / 2%);
+  --sidebar-width: 252px;
+
+  color-scheme: light;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--color-canvas);
+  color: var(--color-text);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid #7b83ed;
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
