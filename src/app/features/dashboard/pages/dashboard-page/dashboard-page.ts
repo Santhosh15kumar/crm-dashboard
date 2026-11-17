@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { DashboardService } from '../../../../core/services/dashboard.service';
 import { SummaryCards } from '../../components/summary-cards/summary-cards';
@@ -13,6 +13,6 @@ import { SummaryCards } from '../../components/summary-cards/summary-cards';
 export class DashboardPage {
   readonly pageTitle = 'Dashboard';
   private readonly dashboardService = inject(DashboardService);
-  protected readonly metrics = this.dashboardService.getMetrics();
+  protected readonly metrics = computed(() => this.dashboardService.getMetrics());
   protected readonly today = new Date();
 }

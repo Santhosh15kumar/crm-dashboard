@@ -16,5 +16,16 @@
     (statusChanged)="updateStatus($event)"
     (sortChanged)="updateSort($event)"
     (filtersCleared)="clearFilters()"
+    (addRequested)="addCustomer()"
+    (edit-customer)="editCustomer($event)"
+    (delete-customer)="deleteCustomer($event)"
   />
 </section>
+
+@if (formOpen()) {
+  <app-customer-form-modal
+    [customer]="editingCustomer()"
+    (saved)="saveCustomer($event)"
+    (cancelled)="closeForm()"
+  />
+}

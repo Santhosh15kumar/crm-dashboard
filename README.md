@@ -27,6 +27,7 @@ Open `http://localhost:4200/` in a browser. The development server reloads the a
   - New Customers (added in the last 30 days)
   - Pending Follow-ups (due today or overdue)
 - Customer directory at `/customers` with mock customer records, search by name or email, status filtering, name/date sorting, and an empty state with a clear-filters action.
+- Customer CRUD through a validated Reactive Forms modal: add, edit, and delete with confirmation. Dashboard KPI values recalculate from the in-memory customer collection.
 - Reports and Settings routes with placeholder pages for future work.
 - Standalone Angular components, semantic HTML, accessible labels and table controls, and responsive SCSS.
 
@@ -57,7 +58,7 @@ npm test         # Run the configured unit test command
 
 ## Current scope and next steps
 
-- Customer records and KPI values are based on local mock data; changes are not persisted.
+- Customer records and KPI values are based on local mock data; CRUD changes are in-memory only and reset when the application reloads.
 - The header search, account/profile, and notification controls are visual placeholders.
-- Reports, Settings, and adding customers are not implemented yet.
+- Reports and Settings remain placeholder pages.
 - This README will be updated as the application grows.

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Customer } from '../models/customer.model';
+import { Injectable, signal } from '@angular/core';
+import { Customer, CustomerFormData } from '../models/customer.model';
 
 const MOCK_CUSTOMERS: readonly Customer[] = [
   {
@@ -114,14 +114,55 @@ const MOCK_CUSTOMERS: readonly Customer[] = [
 
 @Injectable({ providedIn: 'root' })
 export class CustomerService {
-  /** Mock records are immutable and can be replaced with an API-backed source later. */
-  readonly customers: readonly Customer[] = MOCK_CUSTOMERS;
+  private readonly records = signal<readonly Customer[]>(MOCK_CUSTOMERS);
+  /** In-memory only. Changes are lost when the application is reloaded. */
+  readonly customers = this.records.asReadonly();
+  private nextId = MOCK_CUSTOMERS.length + 1;
 
   getAll(): readonly Customer[] {
-    return this.customers;
+    return this.customers();
   }
 
   getById(id: Customer['id']): Customer | undefined {
-    return this.customers.find((customer) => customer.id === id);
+    return this.customers().find((customer) => customer.id === id);
+  }
+
+  create(data: CustomerFormData): Customer {
+    const customer: Customer = {
+      id: `cus-${Date.now()}-${this.nextId++}`,
+      ...data,
+      name: data.name.trim(),
+      email: data.email.trim(),
+      company: data.company.trim(),
+      createdAt: new Date().toISOString(),
+      followUpDueAt: null,
+    };
+
+    this.records.update((customers) => [...customers, customer]);
+    return customer;
+  }
+
+  update(id: Customer['id'], data: CustomerFormData): Customer | undefined {
+    const current = this.getById(id);
+    if (!current) return undefined;
+
+    const updated: Customer = {
+      ...current,
+      ...data,
+      name: data.name.trim(),
+      email: data.email.trim(),
+      company: data.company.trim(),
+    };
+
+    this.records.update((customers) => customers.map((customer) => customer.id === id ? updated : customer));
+    return updated;
+  }
+
+  delete(id: Customer['id']): boolean {
+    const customers = this.customers();
+    if (!customers.some((customer) => customer.id === id)) return false;
+
+    this.records.set(customers.filter((customer) => customer.id !== id));
+    return true;
   }
 }

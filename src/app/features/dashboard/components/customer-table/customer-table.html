@@ -4,7 +4,7 @@
       <div class="customer-panel__title-row"><h2 id="customers-title">Customers</h2><span class="record-count">{{ customers.length }}</span></div>
       <p>Manage and track your customer relationships.</p>
     </div>
-    <button class="add-customer" type="button" disabled aria-label="Add customer (coming soon)"><span aria-hidden="true">+</span> Add customer</button>
+    <button class="add-customer" type="button" (click)="addRequested.emit()"><span aria-hidden="true">+</span> Add customer</button>
   </div>
 
   <div class="table-toolbar">
@@ -29,6 +29,7 @@
           <th scope="col">Company</th>
           <th scope="col">Status</th>
           <th scope="col" [attr.aria-sort]="sort.field === 'createdAt' ? (sort.direction === 'asc' ? 'ascending' : 'descending') : 'none'"><button type="button" (click)="toggleSort('createdAt')" [attr.aria-label]="'Sort by date added. ' + sortLabel('createdAt')">Date added <span>↕</span></button></th>
+          <th scope="col"><span class="sr-only">Actions</span></th>
         </tr>
       </thead>
       <tbody>
@@ -38,9 +39,13 @@
             <td><span class="company-name">{{ customer.company }}</span></td>
             <td><span class="status-badge" [class]="'status-badge status-badge--' + customer.status">{{ customer.status }}</span></td>
             <td class="muted-cell">{{ customer.createdAt | date: 'MMM d, y' }}</td>
+            <td><div class="row-actions">
+              <button type="button" (click)="editRequested.emit(customer)" [attr.aria-label]="'Edit ' + customer.name">Edit</button>
+              <button type="button" class="row-actions__delete" (click)="deleteRequested.emit(customer)" [attr.aria-label]="'Delete ' + customer.name">Delete</button>
+            </div></td>
           </tr>
         } @empty {
-          <tr><td class="empty-state" colspan="4"><span class="empty-state__icon" aria-hidden="true">⌕</span><strong>No customers found</strong><span>Try changing your search or status filter.</span>@if (searchTerm || statusFilter !== 'all') { <button type="button" class="clear-filters" (click)="filtersCleared.emit()">Clear filters</button> }</td></tr>
+          <tr><td class="empty-state" colspan="5"><span class="empty-state__icon" aria-hidden="true">⌕</span><strong>No customers found</strong><span>Try changing your search or status filter.</span>@if (searchTerm || statusFilter !== 'all') { <button type="button" class="clear-filters" (click)="filtersCleared.emit()">Clear filters</button> }</td></tr>
         }
       </tbody>
     </table>

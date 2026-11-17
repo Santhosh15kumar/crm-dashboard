@@ -24,6 +24,9 @@ export class CustomerTable {
   @Output() statusChanged = new EventEmitter<CustomerStatus | 'all'>();
   @Output() sortChanged = new EventEmitter<CustomerSort>();
   @Output() filtersCleared = new EventEmitter<void>();
+  @Output() addRequested = new EventEmitter<void>();
+  @Output('edit-customer') editRequested = new EventEmitter<Customer>();
+  @Output('delete-customer') deleteRequested = new EventEmitter<Customer>();
 
   protected onSearchInput(event: Event): void {
     this.searchChanged.emit((event.target as HTMLInputElement).value);

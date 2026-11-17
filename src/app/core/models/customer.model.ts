@@ -12,6 +12,8 @@ export interface Customer {
   readonly followUpDueAt: string | null;
 }
 
+export type CustomerFormData = Pick<Customer, 'name' | 'email' | 'company' | 'status'>;
+
 export type CustomerSortField = 'name' | 'createdAt';
 export type SortDirection = 'asc' | 'desc';
 
