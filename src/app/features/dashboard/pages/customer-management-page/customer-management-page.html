@@ -7,7 +7,12 @@
     </div>
   </div>
 
+  @if (persistenceWarning(); as warning) {
+    <p class="persistence-warning" role="status">{{ warning }}</p>
+  }
+
   <app-customer-table
+    ngSkipHydration
     [customers]="filteredCustomers()"
     [searchTerm]="searchTerm()"
     [statusFilter]="statusFilter()"

@@ -21,6 +21,7 @@ export class CustomerManagementPage {
   protected readonly sort = signal<CustomerSort>({ field: 'createdAt', direction: 'desc' });
   protected readonly formOpen = signal(false);
   protected readonly editingCustomer = signal<Customer | null>(null);
+  protected readonly persistenceWarning = this.customerService.persistenceWarning;
 
   protected readonly filteredCustomers = computed(() => {
     const query = this.searchTerm().trim().toLocaleLowerCase();

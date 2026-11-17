@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { CustomerFormData } from '../models/customer.model';
-import { CustomerService } from './customer.service';
+import { CUSTOMER_STORAGE_KEY, CustomerService } from './customer.service';
 
 describe('CustomerService', () => {
   let service: CustomerService;
@@ -12,8 +12,61 @@ describe('CustomerService', () => {
   };
 
   beforeEach(() => {
+    window.localStorage.clear();
     TestBed.configureTestingModule({ providers: [CustomerService] });
     service = TestBed.inject(CustomerService);
+  });
+
+  it('uses mock records when LocalStorage has no customer key', () => {
+    service.initialize();
+
+    expect(service.getAll()).toHaveLength(12);
+    expect(service.persistenceWarning()).toBeNull();
+  });
+
+  it('falls back to mock records for empty storage values', () => {
+    window.localStorage.setItem(CUSTOMER_STORAGE_KEY, '   ');
+    service.initialize();
+
+    expect(service.getAll()).toHaveLength(12);
+    expect(service.persistenceWarning()).toContain('empty or invalid');
+  });
+
+  it('falls back safely for malformed JSON and invalid customer data', () => {
+    window.localStorage.setItem(CUSTOMER_STORAGE_KEY, '{not-json');
+    expect(() => service.initialize()).not.toThrow();
+    expect(service.getAll()).toHaveLength(12);
+    expect(service.persistenceWarning()).toContain('could not be read');
+
+    window.localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify([{ id: 'incomplete' }]));
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({ providers: [CustomerService] });
+    service = TestBed.inject(CustomerService);
+    service.initialize();
+    expect(service.getAll()).toHaveLength(12);
+    expect(service.persistenceWarning()).toContain('invalid');
+  });
+
+  it('loads valid stored records and preserves a valid empty list', () => {
+    const savedCustomer = {
+      id: 'saved-1',
+      name: 'Saved Customer',
+      email: 'saved@example.com',
+      company: 'Saved Co.',
+      status: 'active',
+      createdAt: '2026-11-01T12:00:00.000Z',
+      followUpDueAt: null,
+    };
+    window.localStorage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify([savedCustomer]));
+    service.initialize();
+    expect(service.getAll()).toEqual([savedCustomer]);
+
+    window.localStorage.setItem(CUSTOMER_STORAGE_KEY, '[]');
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({ providers: [CustomerService] });
+    service = TestBed.inject(CustomerService);
+    service.initialize();
+    expect(service.getAll()).toEqual([]);
   });
 
   it('creates a customer with trimmed fields and generated metadata', () => {
@@ -25,6 +78,7 @@ describe('CustomerService', () => {
     expect(customer.company).toBe('Example Co.');
     expect(customer.followUpDueAt).toBeNull();
     expect(service.getById(customer.id)).toEqual(customer);
+    expect(JSON.parse(window.localStorage.getItem(CUSTOMER_STORAGE_KEY) ?? '[]')).toContainEqual(customer);
   });
 
   it('updates customer details without replacing creation metadata', () => {
@@ -35,6 +89,7 @@ describe('CustomerService', () => {
     expect(updated?.createdAt).toBe(existing.createdAt);
     expect(updated?.followUpDueAt).toBe(existing.followUpDueAt);
     expect(updated?.status).toBe('active');
+    expect(JSON.parse(window.localStorage.getItem(CUSTOMER_STORAGE_KEY) ?? '[]')).toContainEqual(updated);
   });
 
   it('returns undefined when asked to update an unknown customer', () => {
@@ -47,5 +102,6 @@ describe('CustomerService', () => {
     expect(service.delete(existing.id)).toBe(true);
     expect(service.getById(existing.id)).toBeUndefined();
     expect(service.delete(existing.id)).toBe(false);
+    expect(JSON.parse(window.localStorage.getItem(CUSTOMER_STORAGE_KEY) ?? '[]')).not.toContainEqual(existing);
   });
 });

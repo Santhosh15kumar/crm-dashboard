@@ -1,5 +1,8 @@
-import { Injectable, signal } from '@angular/core';
-import { Customer, CustomerFormData } from '../models/customer.model';
+import { isPlatformBrowser } from '@angular/common';
+import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { Customer, CustomerFormData, CustomerStatus } from '../models/customer.model';
+
+export const CUSTOMER_STORAGE_KEY = 'northstar-crm.customers.v1';
 
 const MOCK_CUSTOMERS: readonly Customer[] = [
   {
@@ -112,22 +115,86 @@ const MOCK_CUSTOMERS: readonly Customer[] = [
   },
 ];
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isValidDate(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0 && !Number.isNaN(Date.parse(value));
+}
+
+function isCustomer(value: unknown): value is Customer {
+  if (!isRecord(value)) return false;
+  const validStatuses: readonly CustomerStatus[] = ['active', 'lead', 'inactive'];
+  const validFollowUpDate = value['followUpDueAt'] === null || isValidDate(value['followUpDueAt']);
+
+  return typeof value['id'] === 'string' && value['id'].trim().length > 0 &&
+    typeof value['name'] === 'string' && value['name'].trim().length > 0 &&
+    typeof value['email'] === 'string' && value['email'].trim().length > 0 &&
+    typeof value['company'] === 'string' && value['company'].trim().length > 0 &&
+    validStatuses.includes(value['status'] as CustomerStatus) &&
+    isValidDate(value['createdAt']) && validFollowUpDate;
+}
+
+function isCustomerArray(value: unknown): value is readonly Customer[] {
+  if (!Array.isArray(value) || !value.every(isCustomer)) return false;
+  return new Set(value.map((customer) => customer.id)).size === value.length;
+}
+
 @Injectable({ providedIn: 'root' })
 export class CustomerService {
+  private readonly platformId = inject(PLATFORM_ID);
   private readonly records = signal<readonly Customer[]>(MOCK_CUSTOMERS);
-  /** In-memory only. Changes are lost when the application is reloaded. */
   readonly customers = this.records.asReadonly();
+  private readonly warning = signal<string | null>(null);
+  readonly persistenceWarning = this.warning.asReadonly();
   private nextId = MOCK_CUSTOMERS.length + 1;
+  private initialized = false;
+
+  /** Restores browser data before the routed UI renders; SSR keeps the mock records. */
+  initialize(): void {
+    if (this.initialized) return;
+    this.initialized = true;
+
+    if (!isPlatformBrowser(this.platformId)) return;
+    const storage = this.getStorage();
+    if (!storage) {
+      this.warning.set('Browser storage is unavailable. Changes may be lost when you reload.');
+      return;
+    }
+
+    try {
+      const stored = storage.getItem(CUSTOMER_STORAGE_KEY);
+      if (stored === null) return;
+      if (stored.trim().length === 0) {
+        this.warning.set('Saved customer data is empty or invalid. Showing sample records.');
+        return;
+      }
+
+      const parsed: unknown = JSON.parse(stored);
+      if (!isCustomerArray(parsed)) {
+        this.warning.set('Saved customer data is invalid. Showing sample records.');
+        return;
+      }
+
+      this.records.set(parsed);
+    } catch {
+      this.warning.set('Saved customer data could not be read. Showing sample records.');
+    }
+  }
 
   getAll(): readonly Customer[] {
+    this.initialize();
     return this.customers();
   }
 
   getById(id: Customer['id']): Customer | undefined {
+    this.initialize();
     return this.customers().find((customer) => customer.id === id);
   }
 
   create(data: CustomerFormData): Customer {
+    this.initialize();
     const customer: Customer = {
       id: `cus-${Date.now()}-${this.nextId++}`,
       ...data,
@@ -139,10 +206,12 @@ export class CustomerService {
     };
 
     this.records.update((customers) => [...customers, customer]);
+    this.persist();
     return customer;
   }
 
   update(id: Customer['id'], data: CustomerFormData): Customer | undefined {
+    this.initialize();
     const current = this.getById(id);
     if (!current) return undefined;
 
@@ -155,14 +224,41 @@ export class CustomerService {
     };
 
     this.records.update((customers) => customers.map((customer) => customer.id === id ? updated : customer));
+    this.persist();
     return updated;
   }
 
   delete(id: Customer['id']): boolean {
+    this.initialize();
     const customers = this.customers();
     if (!customers.some((customer) => customer.id === id)) return false;
 
     this.records.set(customers.filter((customer) => customer.id !== id));
+    this.persist();
     return true;
+  }
+
+  private getStorage(): Storage | null {
+    try {
+      return globalThis.localStorage;
+    } catch {
+      return null;
+    }
+  }
+
+  private persist(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const storage = this.getStorage();
+    if (!storage) {
+      this.warning.set('Browser storage is unavailable. Changes may be lost when you reload.');
+      return;
+    }
+
+    try {
+      storage.setItem(CUSTOMER_STORAGE_KEY, JSON.stringify(this.customers()));
+      this.warning.set(null);
+    } catch {
+      this.warning.set('Customer changes are active for this session but could not be saved.');
+    }
   }
 }

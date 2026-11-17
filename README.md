@@ -46,7 +46,7 @@ src/app/
 src/styles.scss                 # Global styles and shared CSS variables
 ```
 
-Customer data is defined by the `Customer` interface in `src/app/core/models/customer.model.ts` and provided by `CustomerService`. `DashboardService` derives the KPI values from those records. No backend API or persistence layer is configured.
+Customer data is defined by the `Customer` interface in `src/app/core/models/customer.model.ts` and provided by `CustomerService`. Valid records are stored in browser LocalStorage and restored during application initialization. `DashboardService` derives KPI values from the current customer collection. This is browser-local storage only; there is no backend API or cross-device synchronization.
 
 ## Available scripts
 

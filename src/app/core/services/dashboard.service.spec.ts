@@ -7,6 +7,7 @@ describe('DashboardService', () => {
   let dashboardService: DashboardService;
 
   beforeEach(() => {
+    window.localStorage.clear();
     TestBed.configureTestingModule({ providers: [CustomerService, DashboardService] });
     customerService = TestBed.inject(CustomerService);
     dashboardService = TestBed.inject(DashboardService);
