@@ -12,11 +12,17 @@ import { Sidebar } from '../../../features/dashboard/components/sidebar/sidebar'
 })
 export class AppShell {
   @ViewChild(Header) private header?: Header;
+  @ViewChild(Sidebar) private sidebar?: Sidebar;
   protected readonly mobileMenuOpen = signal(false);
   protected readonly pageTitle = signal('Dashboard');
 
   protected toggleMobileMenu(): void {
-    this.mobileMenuOpen.update((open) => !open);
+    const opening = !this.mobileMenuOpen();
+    this.mobileMenuOpen.set(opening);
+    setTimeout(() => {
+      if (opening) this.sidebar?.focusFirstLink();
+      else this.header?.focusMenuButton();
+    });
   }
 
   protected closeMobileMenu(restoreFocus = true): void {

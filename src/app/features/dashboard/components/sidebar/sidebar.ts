@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -9,6 +9,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
+  @ViewChild('navigation') private navigation?: ElementRef<HTMLElement>;
+
   @Input() mobileOpen = false;
   @Output() navigationSelected = new EventEmitter<void>();
 
@@ -28,4 +30,29 @@ export class Sidebar {
       ],
     },
   ];
+
+  focusFirstLink(): void {
+    this.navigation?.nativeElement.querySelector<HTMLElement>('a')?.focus();
+  }
+
+  protected trapFocus(event: KeyboardEvent): void {
+    if (!this.mobileOpen || event.key !== 'Tab') return;
+    const sidebar = this.navigation?.nativeElement.closest('aside');
+    if (!sidebar) return;
+
+    const focusable = Array.from(sidebar.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ));
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if (!first || !last) return;
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
 }

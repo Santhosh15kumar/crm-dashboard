@@ -1,4 +1,4 @@
-<aside id="main-navigation" class="sidebar" [class.sidebar--open]="mobileOpen" aria-label="Main navigation">
+<aside id="main-navigation" class="sidebar" [class.sidebar--open]="mobileOpen" aria-label="Main navigation" (keydown)="trapFocus($event)">
   <a class="brand" href="/" aria-label="Northstar CRM home">
     <span class="brand__mark" aria-hidden="true">N</span>
     <span class="brand__name">northstar<span>CRM</span></span>
@@ -10,7 +10,7 @@
     <span class="workspace-switcher__chevron" aria-hidden="true">⌄</span>
   </div>
 
-  <nav class="navigation">
+  <nav #navigation class="navigation">
     @for (group of navigationGroups; track group.label) {
       <div class="navigation__group">
         <p class="navigation__label">{{ group.label }}</p>

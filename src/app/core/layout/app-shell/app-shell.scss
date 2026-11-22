@@ -1,6 +1,6 @@
 :host { display: block; min-height: 100dvh; }
 .app-shell { min-height: 100dvh; background: var(--color-canvas); }
-.app-shell__main { min-height: 100dvh; }
+.app-shell__main { min-width: 0; min-height: 100dvh; }
 .app-shell__content { min-height: calc(100dvh - 88px); padding: 30px 36px; }
 .sidebar-backdrop { position: fixed; inset: 0; z-index: 20; border: 0; background: rgb(18 28 45 / 32%); }
 

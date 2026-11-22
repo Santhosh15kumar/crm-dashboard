@@ -8,6 +8,7 @@
 .topbar h1 span { color: #efb84c; font-size: 15px; }
 .topbar__actions { display: flex; align-items: center; gap: 19px; }
 .search-box { display: flex; width: 228px; height: 38px; align-items: center; gap: 8px; padding: 0 10px; border: 1px solid #e7ebf0; border-radius: 8px; color: #8993a2; }
+.search-box:focus-within { outline: 3px solid #7b83ed; outline-offset: 2px; }
 .search-box > span { font-size: 21px; line-height: 1; }
 .search-box input { width: 100%; min-width: 0; border: 0; outline: 0; color: #334056; font: inherit; font-size: 10px; }
 .search-box input::placeholder { color: #a2aab6; }
@@ -23,16 +24,19 @@
 
 @media (max-width: 899px) {
   .topbar { min-height: 78px; padding: 14px 22px; }
-  .menu-button { display: grid; flex: 0 0 auto; }
+  .menu-button { display: grid; width: 44px; height: 44px; flex: 0 0 auto; }
   .topbar__heading { flex: 1; }
 }
 
 @media (max-width: 620px) {
-  .topbar { flex-wrap: wrap; gap: 12px; padding: 13px 16px; }
+  .topbar { flex-wrap: wrap; gap: 12px; padding: max(13px, env(safe-area-inset-top)) 16px 13px; }
   .topbar__heading { min-width: 0; }
   .topbar__eyebrow { display: none; }
   .topbar h1 { font-size: 15px; }
-  .topbar__actions { width: 100%; justify-content: flex-end; gap: 12px; }
-  .search-box { flex: 1; width: auto; }
+  .topbar__actions { width: 100%; min-width: 0; justify-content: flex-end; gap: 8px; }
+  .search-box { min-width: 0; height: 44px; flex: 1; width: auto; }
+  .search-box kbd { display: none; }
+  .icon-button { width: 44px; height: 44px; flex: 0 0 auto; }
+  .topbar__user { min-height: 44px; flex: 0 0 auto; }
   .topbar__user-name, .topbar__chevron { display: none; }
 }
